@@ -12,6 +12,11 @@ import CRM from "./pages/CRM";
 import Dashboard from "./pages/Dashboard";
 import Competitors from "./pages/Competitors";
 import Pricing from "./pages/Pricing";
+import DeveloperLogin from "./pages/DeveloperLogin";
+import DeveloperPanel from "./pages/DeveloperPanel";
+import AdvancedCampaignControl from "./pages/AdvancedCampaignControl";
+import MediaBoost from "./pages/MediaBoost";
+import InteractiveGuide from "./pages/InteractiveGuide";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -25,6 +30,11 @@ function Router() {
       <Route path={"/crm"} component={CRM} />
       <Route path={"/competitors"} component={Competitors} />
       <Route path={"/pricing"} component={Pricing} />
+      <Route path={"/developer-login"} component={DeveloperLogin} />
+      <Route path={"/developer-panel"} component={DeveloperPanel} />
+      <Route path={"/advanced-campaigns"} component={AdvancedCampaignControl} />
+      <Route path={"/media-boost"} component={MediaBoost} />
+      <Route path={"/guide"} component={InteractiveGuide} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
