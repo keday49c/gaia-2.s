@@ -1,7 +1,8 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import * as db from "./db";
 
 export const appRouter = router({
   system: systemRouter,
@@ -17,12 +18,67 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  campaigns: router({
+    list: protectedProcedure.query(({ ctx }) =>
+      db.getCampaignsByUser(ctx.user.id)
+    ),
+    create: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ ctx, input }) => {
+        const id = `campaign_${Date.now()}`;
+        return db.createCampaign({
+          id,
+          userId: ctx.user.id,
+          ...input,
+        });
+      }),
+  }),
+
+  credentials: router({
+    list: protectedProcedure.query(({ ctx }) =>
+      db.getApiCredentialsByUser(ctx.user.id)
+    ),
+    save: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ ctx, input }) => {
+        const id = `cred_${Date.now()}`;
+        return db.saveApiCredential({
+          id,
+          userId: ctx.user.id,
+          ...input,
+        });
+      }),
+  }),
+
+  subscriptions: router({
+    getPlans: publicProcedure.query(() => db.getSubscriptionPlans()),
+    getUserPlan: protectedProcedure.query(({ ctx }) =>
+      db.getUserSubscription(ctx.user.id)
+    ),
+  }),
+
+  crm: router({
+    getLeads: protectedProcedure.query(({ ctx }) =>
+      db.getCrmLeadsByUser(ctx.user.id)
+    ),
+    createLead: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ ctx, input }) => {
+        const id = `lead_${Date.now()}`;
+        return db.createCrmLead({
+          id,
+          userId: ctx.user.id,
+          ...input,
+        });
+      }),
+  }),
+
+  analytics: router({
+    getCampaignMetrics: protectedProcedure
+      .input((val: any) => val)
+      .query(({ input }) => db.getCampaignMetrics(input.campaignId)),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
+
