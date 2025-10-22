@@ -1,0 +1,70 @@
+appId: com.apogeu.app
+productName: Apogeu
+directories:
+  buildResources: assets
+  output: dist/electron
+
+files:
+  - from: dist
+    to: app
+    filter:
+      - "!**/*.map"
+  - from: dist-electron
+    to: app
+
+win:
+  target:
+    - nsis
+    - portable
+  certificateFile: null
+  certificatePassword: null
+  signingHashAlgorithms:
+    - sha256
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Apogeu
+
+mac:
+  target:
+    - dmg
+    - zip
+  category: public.app-category.business
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: null
+  entitlementsInherit: null
+  extendInfo: null
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+      type: file
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Office
+  icon: assets/icon.png
+
+appImage:
+  artifactName: ${name}-${version}.${ext}
+
+deb:
+  artifactName: ${name}-${version}.${ext}
+
+publish:
+  provider: github
+  owner: keday49c
+  repo: flower-bloom-network
+  releaseType: release
+

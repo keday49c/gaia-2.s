@@ -9,16 +9,22 @@ import Campaigns from "./pages/Campaigns";
 import Credentials from "./pages/Credentials";
 import Analytics from "./pages/Analytics";
 import CRM from "./pages/CRM";
+import Dashboard from "./pages/Dashboard";
+import Competitors from "./pages/Competitors";
+import Pricing from "./pages/Pricing";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/campaigns"} component={Campaigns} />
       <Route path={"/credentials"} component={Credentials} />
       <Route path={"/analytics"} component={Analytics} />
       <Route path={"/crm"} component={CRM} />
+      <Route path={"/competitors"} component={Competitors} />
+      <Route path={"/pricing"} component={Pricing} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

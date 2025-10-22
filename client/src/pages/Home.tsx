@@ -15,14 +15,17 @@ export default function Home() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-        <nav className="border-b border-slate-700 bg-slate-900/50 backdrop-blur">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white">
+        <nav className="border-b border-purple-700/30 bg-slate-950/50 backdrop-blur">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {APP_LOGO && <img src={APP_LOGO} alt="Logo" className="h-8 w-8" />}
-              <span className="text-xl font-bold">{APP_TITLE}</span>
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Apogeu Logo" className="h-10 w-10" />
+              <div>
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">APOGEU</span>
+                <p className="text-xs text-purple-300">Seu Pico de Sucesso em Marketing Digital</p>
+              </div>
             </div>
-            <Button asChild variant="default">
+            <Button asChild variant="default" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
               <a href={getLoginUrl()}>Entrar</a>
             </Button>
           </div>
@@ -30,22 +33,26 @@ export default function Home() {
 
         <main className="container mx-auto px-4 py-20">
           <div className="max-w-3xl mx-auto text-center mb-20">
-            <h1 className="text-5xl font-bold mb-6">
-              Automação Inteligente de Marketing Digital
+            <img src="/logo.png" alt="Apogeu" className="h-24 w-24 mx-auto mb-8" />
+            <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+              APOGEU
             </h1>
+            <p className="text-2xl font-semibold text-purple-200 mb-6">
+              Seu Pico de Sucesso em Marketing Digital
+            </p>
             <p className="text-xl text-slate-300 mb-8">
               Crie, gerencie e otimize campanhas em múltiplas plataformas com robôs de automação alimentados por IA
             </p>
-            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">
+            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold">
               <a href={getLoginUrl()}>Começar Gratuitamente</a>
             </Button>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-20">
-            <Card className="bg-slate-800 border-slate-700">
+            <Card className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 border-purple-700/50 hover:border-purple-600/80 transition">
               <CardHeader>
-                <Zap className="h-8 w-8 text-blue-400 mb-2" />
-                <CardTitle>Automação Completa</CardTitle>
+                <Zap className="h-8 w-8 text-blue-300 mb-2" />
+                <CardTitle className="text-white">Automação Completa</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-300">
@@ -54,10 +61,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-800 border-slate-700">
+            <Card className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border-purple-700/50 hover:border-purple-600/80 transition">
               <CardHeader>
-                <BarChart3 className="h-8 w-8 text-green-400 mb-2" />
-                <CardTitle>Analytics Avançado</CardTitle>
+                <BarChart3 className="h-8 w-8 text-purple-300 mb-2" />
+                <CardTitle className="text-white">Analytics Avançado</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-300">
@@ -66,10 +73,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-800 border-slate-700">
+            <Card className="bg-gradient-to-br from-pink-900/40 to-blue-900/40 border-purple-700/50 hover:border-purple-600/80 transition">
               <CardHeader>
-                <Users className="h-8 w-8 text-purple-400 mb-2" />
-                <CardTitle>Bot Omnichannel</CardTitle>
+                <Users className="h-8 w-8 text-pink-300 mb-2" />
+                <CardTitle className="text-white">Bot Omnichannel</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-300">
@@ -79,12 +86,12 @@ export default function Home() {
             </Card>
           </div>
 
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-12 text-center">
-            <h2 className="text-3xl font-bold mb-4">Planos de Assinatura</h2>
+          <div className="bg-gradient-to-r from-blue-900/50 via-purple-900/50 to-pink-900/50 border border-purple-600/50 rounded-lg p-12 text-center">
+            <h2 className="text-3xl font-bold mb-4 text-white">Planos de Assinatura</h2>
             <p className="text-slate-300 mb-8">
               Escolha o plano ideal para suas necessidades
             </p>
-            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">
+            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold">
               <a href={getLoginUrl()}>Ver Planos</a>
             </Button>
           </div>

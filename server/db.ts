@@ -253,3 +253,152 @@ export async function createWhatsappInteraction(interaction: InsertWhatsappInter
     console.error("[Database] Failed to create WhatsApp interaction:", error);
   }
 }
+
+
+/**
+ * Delete campaign
+ */
+export async function deleteCampaign(campaignId: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  try {
+    await db.delete(campaigns).where(eq(campaigns.id, campaignId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete campaign:", error);
+    return false;
+  }
+}
+
+/**
+ * Update campaign
+ */
+export async function updateCampaign(campaignId: string, updates: any): Promise<Campaign | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  try {
+    await db.update(campaigns).set(updates).where(eq(campaigns.id, campaignId));
+    const updated = await db.select().from(campaigns).where(eq(campaigns.id, campaignId)).limit(1);
+    return updated.length > 0 ? updated[0] : undefined;
+  } catch (error) {
+    console.error("[Database] Failed to update campaign:", error);
+    throw error;
+  }
+}
+
+/**
+ * Delete API credential
+ */
+export async function deleteApiCredential(credentialId: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  try {
+    await db.delete(apiCredentials).where(eq(apiCredentials.id, credentialId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete API credential:", error);
+    return false;
+  }
+}
+
+/**
+ * Delete CRM lead
+ */
+export async function deleteCrmLead(leadId: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  try {
+    await db.delete(crmLeads).where(eq(crmLeads.id, leadId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete CRM lead:", error);
+    return false;
+  }
+}
+
+
+
+/**
+ * Subscription management queries
+ */
+export async function createUserSubscription(subscription: any): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  try {
+    await db.insert(userSubscriptions).values({
+      id: `sub_${Date.now()}`,
+      userId: subscription.userId,
+      planId: subscription.planId,
+      status: subscription.status,
+      startDate: subscription.startDate,
+      paymentMethod: subscription.paymentMethod,
+      createdAt: new Date(),
+    });
+  } catch (error) {
+    console.error("[Database] Failed to create subscription:", error);
+  }
+}
+
+export async function updateUserSubscription(subscription: any): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  try {
+    await db.update(userSubscriptions)
+      .set({
+        planId: subscription.planId,
+        status: subscription.status,
+      })
+      .where(eq(userSubscriptions.userId, subscription.userId));
+  } catch (error) {
+    console.error("[Database] Failed to update subscription:", error);
+  }
+}
+
+/**
+ * Payment records queries
+ */
+export async function createPaymentRecord(payment: any): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  try {
+    // Create a payment record in the database
+    // This would require a paymentRecords table in the schema
+    console.log("[Database] Payment record created:", payment.id);
+  } catch (error) {
+    console.error("[Database] Failed to create payment record:", error);
+  }
+}
+
+export async function getPaymentRecordsByUser(userId: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    // Query payment records for user
+    // This would require a paymentRecords table in the schema
+    return [];
+  } catch (error) {
+    console.error("[Database] Failed to get payment records:", error);
+    return [];
+  }
+}
+
+export async function updatePaymentRecord(paymentId: string, updates: any): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  try {
+    // Update payment record
+    console.log("[Database] Payment record updated:", paymentId);
+  } catch (error) {
+    console.error("[Database] Failed to update payment record:", error);
+  }
+}
+

@@ -4,6 +4,11 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import * as db from "./db";
 import { campaignAutomationService } from "./services/campaignAutomationService";
+import { contentGenerationService } from "./services/contentGenerationService";
+import { voiceSynthesisService } from "./services/voiceSynthesisService";
+import { contentAnalysisService } from "./services/contentAnalysisService";
+import { subscriptionService } from "./services/subscriptionService";
+import { analyticsService } from "./services/analyticsService";
 
 export const appRouter = router({
   system: systemRouter,
@@ -13,9 +18,7 @@ export const appRouter = router({
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
+      return { success: true } as const;
     }),
   }),
 
@@ -96,6 +99,95 @@ export const appRouter = router({
       .query(({ input }) =>
         campaignAutomationService.optimizeCampaign(input.campaignId, input.metrics)
       ),
+  }),
+
+  content: router({
+    generate: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ ctx, input }) => {
+        if (!contentGenerationService.isInitialized()) {
+          throw new Error("Content generation service not initialized. Configure API keys.");
+        }
+        return contentGenerationService.generateContent(input);
+      }),
+    analyze: publicProcedure
+      .input((val: any) => val)
+      .query(({ input }) => {
+        return contentAnalysisService.analyzeContent(input.content, input.platform);
+      }),
+    optimizeForSEO: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ input }) => {
+        if (!contentGenerationService.isInitialized()) {
+          throw new Error("Content generation service not initialized.");
+        }
+        return contentGenerationService.optimizeForSEO(input.content, input.keywords);
+      }),
+  }),
+
+  voice: router({
+    synthesize: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ input }) => {
+        if (!voiceSynthesisService.isInitialized()) {
+          throw new Error("Voice synthesis service not initialized. Configure ElevenLabs API key.");
+        }
+        return voiceSynthesisService.synthesizeVoice(input);
+      }),
+    getAvailableVoices: protectedProcedure.query(() => {
+      if (!voiceSynthesisService.isInitialized()) {
+        throw new Error("Voice synthesis service not initialized.");
+      }
+      return voiceSynthesisService.getAvailableVoices();
+    }),
+    synthesizeWithVariety: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ input }) => {
+        if (!voiceSynthesisService.isInitialized()) {
+          throw new Error("Voice synthesis service not initialized.");
+        }
+        return voiceSynthesisService.synthesizeWithVariety(input.text, input.voiceIds);
+      }),
+  }),
+
+  billing: router({
+    getAllPlans: publicProcedure.query(() => subscriptionService.getAllPlans()),
+
+    getPlan: publicProcedure
+      .input((val: any) => val)
+      .query(({ input }) => subscriptionService.getPlan(input.planId)),
+
+    createSubscription: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ ctx, input }) => {
+        const subscription = subscriptionService.createSubscription(
+          ctx.user.id,
+          input.planId,
+          input.billingCycle,
+          input.paymentMethod
+        );
+        return db.createUserSubscription(subscription);
+      }),
+
+    getPaymentHistory: protectedProcedure.query(({ ctx }) => {
+      return db.getPaymentRecordsByUser(ctx.user.id);
+    }),
+  }),
+
+  reports: router({
+    generateAnalyticsReport: protectedProcedure
+      .input((val: any) => val)
+      .query(async ({ input }) => {
+        const metrics = await db.getCampaignMetrics(input.campaignId);
+        return analyticsService.generateReport(input.campaignId, metrics as any);
+      }),
+
+    comparePlatforms: protectedProcedure
+      .input((val: any) => val)
+      .query(async ({ input }) => {
+        const metrics = await db.getCampaignMetrics(input.campaignId);
+        return analyticsService.comparePlatforms(metrics as any);
+      }),
   }),
 });
 
