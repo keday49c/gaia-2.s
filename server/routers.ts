@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import * as db from "./db";
+import { campaignAutomationService } from "./services/campaignAutomationService";
 
 export const appRouter = router({
   system: systemRouter,
@@ -77,6 +78,24 @@ export const appRouter = router({
     getCampaignMetrics: protectedProcedure
       .input((val: any) => val)
       .query(({ input }) => db.getCampaignMetrics(input.campaignId)),
+  }),
+
+  automation: router({
+    createAutomatedCampaign: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ ctx, input }) =>
+        campaignAutomationService.createAutomatedCampaign(ctx.user.id, input)
+      ),
+    fetchMetrics: protectedProcedure
+      .input((val: any) => val)
+      .mutation(({ input }) =>
+        campaignAutomationService.fetchAndRecordMetrics(input.campaignId, input.platform)
+      ),
+    optimizeCampaign: protectedProcedure
+      .input((val: any) => val)
+      .query(({ input }) =>
+        campaignAutomationService.optimizeCampaign(input.campaignId, input.metrics)
+      ),
   }),
 });
 
